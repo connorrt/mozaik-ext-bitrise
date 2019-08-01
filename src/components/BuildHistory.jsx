@@ -3,9 +3,9 @@ import React, { Component, PropTypes } from 'react';
 import reactMixin                      from 'react-mixin';
 import { ListenerMixin }               from 'reflux';
 
-import Mozaik from 'mozaik/browser';
 import BuildHistoryItem from './BuildHistoryItem';
 import BuildHistoryHeader from './BuildHistoryHeader';
+import Mozaik from 'mozaik/browser';
 
 class BuildHistory extends Component {
     constructor(props) {

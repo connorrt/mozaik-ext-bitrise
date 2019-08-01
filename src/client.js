@@ -1,5 +1,8 @@
+import request from 'superagent-bluebird-promise';
+import chalk from 'chalk';
 import process from 'process';
-import fetch from 'node-fetch';
+import _       from 'lodash';
+import * as Promise from 'bluebird';
 
 import convict from 'convict';
 
@@ -13,14 +16,6 @@ const config = convict({
         }
     }
 });
-
-function bitriseApiRequest(path) {
-    return fetch(`https://api.bitrise.io/v0.1/${path}`, {
-        headers: {
-            'Authorization': `token ${config.get('bitrise.token')}`
-        }
-    });
-}
 
 /**
  * adds a estimation about the build time
@@ -51,35 +46,47 @@ function addEstimation(builds) {
     });
 }
 
-function getMe() {
-    return bitriseApiRequest('me').then(res => res.json());
-}
+const client = mozaik => {
 
-function getApp({slug}) {
-    return bitriseApiRequest(`apps/${slug}`).then(res => res.json());
-}
+    const buildApiRequest = (path, params) => {
 
-function getBuilds({ slug , limit = 10, workflow}) {
+        mozaik.loadApiConfig(config);
 
-    var path = `apps/${slug}/builds?limit=${limit}`;
-    if (workflow) {
-        path += `&workflow=${workflow}`;
+        // Will change to v1.0 when API is finalized, TODO: Update when it comes out
+        const baseURL = 'https://api.bitrise.io/v0.1';
+        const req = request.get(`${baseURL}/${path}`)
+            .set('Authorization', `token ${config.get('bitrise.token')}`)
+
+        if (params) {
+            req.query(params);
+        }
+
+        return req.promise();
     }
 
-    return bitriseApiRequest(path).then((res) => {
-        return res.json();
-    }).then((res) => {
-        return res.data;
-    }).then(addEstimation);
-}
-
-const client = mozaik => {
-    mozaik.loadApiConfig(config);
-
     return {
-        getApp,
-        getMe,
-        getBuilds
+        getApp({slug}) {
+
+            return buildApiRequest(`apps/${slug}`)
+                .then(res => res.body);
+        },
+        getMe() {
+
+            return buildApiRequest(`me`)
+                .then(res => res.body);
+        },
+        getBuilds({ slug , limit = 10, workflow}) {
+            let path = `apps/${slug}/builds?limit=${limit}`;
+            if (workflow) {
+                path += `&workflow=${workflow}`;
+            }
+
+            return buildApiRequest(path).then((res) => {
+                return res.body; // res.json() ???
+            }).then((res) => {
+                return res.data;
+            }).then(addEstimation);
+        }
     };
 };
 
