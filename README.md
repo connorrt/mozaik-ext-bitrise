@@ -1,9 +1,6 @@
 # Mozaïk bitrise widgets
 
-[![License][license-image]][license-url]
-[![Travis CI][travis-image]][travis-url]
-[![NPM version][npm-image]][npm-url]
-![widget count][widget-count-image]
+[Based on mozaik-ext-bitrise by lovoo](https://github.com/lovoo/mozaik-ext-bitrise/)
 
 ## Bitrise Client Configuration
 
@@ -79,11 +76,3 @@ key          | required | description
     columns: 1, rows: 1, x: 0, y: 0
 }
 ```
-
-[travis-image]: https://img.shields.io/travis/lovoo/mozaik-ext-bitrise.svg?style=flat-square
-[travis-url]: https://travis-ci.org/lovoo/mozaik-ext-bitrise
-[license-image]: https://img.shields.io/github/license/lovoo/mozaik-ext-bitrise.svg?style=flat-square
-[license-url]: https://github.com/lovoo/mozaik-ext-bitrise/blob/master/LICENSE
-[npm-image]: https://img.shields.io/npm/v/mozaik-ext-bitrise.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/mozaik-ext-bitrise
-[widget-count-image]: https://img.shields.io/badge/widgets-x1-green.svg?style=flat-square
